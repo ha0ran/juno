@@ -35,12 +35,37 @@
         <script type="text/javascript" src="lib/bootstrap.js"></script>
         <script type="text/javascript" src="lib/js-markdown-extra.js"></script>
         <script type="text/javascript">
-            $('#editor').on("input", function(){
+            $('#editor').on("input change",function(){
                 preview();
-            })
+            });
             function preview(){
                 $('#preview').html(Markdown($('#editor').val()));
             }
+            $(document).ready(function() {
+                jQuery.event.props.push('dataTransfer');
+                $('#editor').bind('drop', function(evt) {
+                    console.log("drop here");
+                    var files = evt.dataTransfer.files;
+                    $.each(files, function(index, file) {
+                        if (!file.type.match('image.*')) {
+                            alert("Sorry, but we only support images now!");
+                            //Display Error Message 
+                        }
+                        var fileReader = new FileReader();
+                        fileReader.onload = (function(file) {
+                            return function(e) { 
+                                $.post('/upload', {name: file.name, content: e.target.result}, function(data) {
+                                    var result = $.parseJSON(data);
+                                    $("#editor").val($("#editor").val() + " !["+ file.name + "](" + result.url + ") ");
+                                    $("#editor").change();
+                                });
+                            }
+                        })(file);
+                        fileReader.readAsDataURL(file);
+                    });
+                    return false;
+                });
+            });
         </script>
     </body>
 </html>
