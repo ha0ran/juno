@@ -1,5 +1,6 @@
 var express = require("express"),
-	fs = require("fs");                                                                
+	fs = require("fs"); 
+    path = require("path");                                                                
     app = express(),
     mongoose = require( 'mongoose' ),
     Post = require('./models/post').Post
@@ -8,7 +9,8 @@ var express = require("express"),
 // tell express to use the bodyParser middleware                                                 
 // and set upload directory                                                                      
 app.use( express.bodyParser({ keepExtensions: true, uploadDir: "uploads" }) );                                                                     
-app.use( express.static( application_root) );
+app.use( express.static( path.join(application_root, 'public') ) );
+app.use('/uploads', express.static( path.join(application_root, 'uploads') ) );
 app.use( express.methodOverride() );
 
 mongoose.connect( 'mongodb://localhost/juno' );
@@ -36,11 +38,12 @@ app.get( '/api/posts', function( request, response ) {
 });
 
 //Insert a new book
-app.post( '/api/posts', function( request, response ) { 
+app.post( '/api/posts', function( request, response ) {
+    // should find the article accroding to it's id, if no id create new one
     var post = new Post({
         title: request.body.title,
-        author: request.body.author,
-        releaseDate: request.body.releaseDate
+        content: request.body.content,
+        lastModifiedAt: new Date().getTime()
     });
     post.save( function( err ) {
         if( !err ) {

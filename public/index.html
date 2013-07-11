@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>JUNO Editor</title>
+        <link href="assets/css/bootstrap.min.css" rel="stylesheet">
+        <link href="assets/css/editor.css" rel="stylesheet">
+    </head>
+    <body>
+    	<div class="navbar">
+            <div class="navbar-inner">
+                <a class="brand" href="#">Juno</a> 
+                <ul class="nav">
+                    <li><a href="#home" data-toggle="tab">Home</a></li> 
+                    <li><a href="#archive" data-toggle="tab">Archive</a></li>
+                    <li class="active"><a href="#new" data-toggle="tab">New</a></li>
+                </ul> 
+            </div>
+        </div>
+        <div class="tab-content">
+            <div class="tab-pane" id="home"> 
+                Welcome to new world!
+            </div>
+            <div class="tab-pane" id="archive"> 
+            </div>
+            <div class="tab-pane active" id="new">
+                <div class="container-fluid">
+                    <input type="text" id="title" class="span12" placeholder="title of the article"/>
+                    <div class="row-fluid">
+                        <div class="span6">
+                            <textarea id="editor"></textarea>
+                        </div>
+                        <div id="preview" class="span6">
+                        </div>
+                    </div>
+                    <div class="btn-group">
+                        <a class="btn" onclick="preview();">Preview</a>
+                        <a class="btn" onclick="submit();">Submit</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script id="postTemplate" type="text/template"> 
+            <div><%= title %></div>
+            <div><%= content %></div>
+        </script>
+        <script type="text/javascript" src="lib/jquery-2.0.2.js"></script>
+        <script type="text/javascript" src="lib/underscore.js"></script>
+        <script type="text/javascript" src="lib/backbone.js"></script>
+        <script type="text/javascript" src="lib/bootstrap.js"></script>
+        <script type="text/javascript" src="lib/js-markdown-extra.js"></script>
+        <script type="text/javascript">
+            $('#editor').on("input change",function(){
+                preview();
+            });
+            function preview(){
+                $('#preview').html(Markdown($('#editor').val()));
+            }
+            function submit(){
+                $.post( '/api/posts', {
+                        'title': $("#title").val(),
+                        'content': $("#editor").val()
+                    }, 
+                    function(data, textStatus, jqXHR) { 
+                        console.log( 'Post response:' ); 
+                        console.dir( data );
+                        console.log( textStatus ); 
+                        console.dir( jqXHR );
+                    }
+                );
+            }
+            $(document).ready(function() {
+                jQuery.event.props.push('dataTransfer');
+                $('#editor').bind('drop', function(evt) {
+                    console.log("drop here");
+                    var files = evt.dataTransfer.files;
+                    $.each(files, function(index, file) {
+                        if (!file.type.match('image.*')) {
+                            alert("Sorry, but we only support images now!");
+                            //Display Error Message 
+                        }
+                        var fileReader = new FileReader();
+                        fileReader.onload = (function(file) {
+                            return function(e) { 
+                                $.post('/upload', {name: file.name, content: e.target.result}, function(data) {
+                                    var result = $.parseJSON(data);
+                                    $("#editor").val($("#editor").val() + " !["+ file.name + "](" + result.url + ") ");
+                                    $("#editor").change();
+                                });
+                            }
+                        })(file);
+                        fileReader.readAsDataURL(file);
+                    });
+                    return false;
+                });
+            });
+        </script>
+        <script type="text/javascript">
+            <!-- For backbone -->
+            var app = app || {};
+            app.Post = Backbone.Model.extend({
+                defaults: {
+                    title: 'Unamed',
+                    content: '',
+                    lastModifiedAt: '1970-01-01'
+                }
+            });
+            var app = app || {};
+            app.Archive = Backbone.Collection.extend({
+                model: app.Post,
+                url: '/api/posts'
+            });
+            var app = app || {};
+            app.PostView = Backbone.View.extend({
+                tagName: 'div',
+                className: 'post',
+                template: _.template( $('#postTemplate').html() ),
+                render: function() {
+                    // tmpl is a function that takes a JSON object and returns html
+                    // this.el is what we defined in tagName. use $el to get access // to jQuery html() function
+                    this.$el.html( this.template( this.model.toJSON() ));
+                    return this; 
+                }
+            });
+            var app = app || {};
+            app.ArchiveView = Backbone.View.extend({
+                el: '#archive',
+                initialize: function( initialBooks ) {
+                    this.collection = new app.Archive(); 
+                    this.collection.fetch({reset: true});
+                    this.render();
+                    this.listenTo( this.collection, 'add', this.renderPost );
+                    this.listenTo( this.collection, 'reset', this.render );
+                },
+                // render library by rendering each book in its collection
+                render: function() { 
+                    this.collection.each(function( item ) {
+                        this.renderPost( item ); 
+                    }, this );
+                },
+                // render a book by creating a BookView and appending the 
+                // element it renders to the library's element 
+                renderPost: function( item ) {
+                    var postView = new app.PostView({
+                        model: item
+                    });
+                    this.$el.append( postView.render().el ); 
+                }
+            });
+            var posts = [
+                { title: 'JavaScript: The Good Parts', content: 'Douglas Crockford',
+                  lastModifiedAt: '2013-02-08' },
+                { title: 'JavaScript: The Good Parts', content: 'Douglas Crockford',
+                  lastModifiedAt: '2013-01-09' },
+                { title: 'JavaScript: The Good Parts', content: 'Douglas Crockford',
+                  lastModifiedAt: '2012-09-08' },
+            ];
+            new app.ArchiveView( posts );
+        </script>
+    </body>
+</html>
