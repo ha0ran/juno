@@ -45,16 +45,30 @@
                 </div>
             </div>
         </div>
-        <script id="postTemplate" type="text/template"> 
+        <script id="post-template" type="text/template"> 
             <div><%= title %></div>
             <div><%= content %></div>
         </script>
-        <script id="entryTemplate" type="text/template">
+        <script id="entry-template" type="text/template">
             <header>
                 <p><time> <%= lastModifiedAt %> </time></p>
                 <h1 class="article-title"><%= title %></h1>
             </header>
             <div><%= content %></div>
+        </script>
+        <script id="pagination-template" type="text/template">
+            <ul class="pager">
+                <% if (currentPage > 1) { %>
+                <li class="next">
+                    <a href="#" class="pagination-item" data-page="<%= currentPage - 1 %>">Newer &rarr;</a>
+                </li>
+                <% } %>
+                <% if (currentPage < pageCount ) { %>
+                <li class="previous">
+                    <a href="#" class="pagination-item" data-page="<%= currentPage + 1 %>">&larr; Older</a>
+                </li>
+                <% } %>
+            </ul>
         </script>
         <script type="text/javascript" src="lib/jquery-2.0.2.js"></script>
         <script type="text/javascript" src="lib/underscore.js"></script>
@@ -119,7 +133,9 @@
             });
         </script>
         <script type="text/javascript">
-            <!-- For backbone -->
+            /* for Backbone script */
+            /* Ref: http://stackoverflow.com/questions/9713246/backbone-js-unable-to-trigger-custom-view-from-parent-view-and-have-child-view */
+            Backbone.View.prototype.eventHub = _.extend({}, Backbone.Events);
             var app = app || {};
             app.Post = Backbone.Model.extend({
                 defaults: {
@@ -131,13 +147,21 @@
             var app = app || {};
             app.Archive = Backbone.Collection.extend({
                 model: app.Post,
-                url: '/api/posts'
+                url: '/api/posts',
+                parse: function(data) {
+                    if (!data) {
+                        this.total = 0;
+                        return []; 
+                    }
+                    this.total = data.total;
+                    return data.posts;
+                },
             });
             var app = app || {};
             app.PostView = Backbone.View.extend({
                 tagName: 'div',
                 className: 'post',
-                template: _.template( $('#postTemplate').html() ),
+                template: _.template( $('#post-template').html() ),
                 render: function() {
                     // tmpl is a function that takes a JSON object and returns html
                     // this.el is what we defined in tagName. use $el to get access // to jQuery html() function
@@ -147,12 +171,32 @@
             });
             app.EntryView = Backbone.View.extend({
                 tagName: 'article',
-                template: _.template( $('#entryTemplate').html() ),
+                template: _.template( $('#entry-template').html() ),
                 render: function() {
                     // tmpl is a function that takes a JSON object and returns html
                     // this.el is what we defined in tagName. use $el to get access // to jQuery html() function
                     this.$el.html( this.template( this.model.toJSON() ));
                     return this; 
+                }
+            });
+            app.PaginationView = Backbone.View.extend({
+                tagName: 'div',
+                //className: "pagination",
+                template: _.template( $('#pagination-template').html() ),
+                events: {
+                    "click .pagination-item": "jumpToPage"
+                },
+                initialize: function(options) {
+                    this.currentPage = options.currentPage;
+                    this.pageCount = options.pageCount;
+                },
+                render: function() {
+                    this.$el.append( this.template( {currentPage: this.currentPage, pageCount: this.pageCount} ));    
+                    return this; 
+                },
+                jumpToPage: function( event ) {
+                    var page = $(event.currentTarget).data("page");
+                    this.eventHub.trigger('changePage', page);
                 }
             });
             var app = app || {};
@@ -183,18 +227,30 @@
             var app = app || {};
             app.HomeView = Backbone.View.extend({
                 el: '#home #entries',
-                initialize: function( initialBooks ) {
-                    this.collection = new app.Archive(); 
-                    this.collection.fetch({reset: true});
+                initialize: function() {
+                    this.collection = new app.Archive();
+                    this.itemsPerPage = 3;
+                    this.currentPage = 1;
+                    this.updateCollection();
                     this.render();
                     this.listenTo( this.collection, 'add', this.renderPost );
                     this.listenTo( this.collection, 'reset', this.render );
+                    this.eventHub.bind('changePage', this.jumpToPage, this);
                 },
+                updateCollection: function() {
+                    this.collection.fetch({reset: true, data: $.param({page: this.currentPage, limit: this.itemsPerPage})});
+                }, 
                 // render library by rendering each book in its collection
                 render: function() { 
+                    /* Need to improve, it's not a good idea to remove all elements
+                       Maybe consider to display a logon or text on the background
+                    */
+                    this.$el.html('');
                     this.collection.each(function( item ) {
                         this.renderEntry( item ); 
                     }, this );
+                    var pageCount = Math.ceil(this.collection.total / this.itemsPerPage )
+                    this.renderPagination( pageCount );
                 },
                 // render a book by creating a BookView and appending the 
                 // element it renders to the library's element 
@@ -203,6 +259,17 @@
                         model: item
                     });
                     this.$el.append( postView.render().el ); 
+                },
+                renderPagination: function(pageCount) {
+                    var paginationView = new app.PaginationView({
+                        pageCount: pageCount,
+                        currentPage: this.currentPage
+                    });
+                    this.$el.append( paginationView.render().el );
+                },
+                jumpToPage: function(page) {
+                    this.currentPage = page;
+                    this.updateCollection();
                 }
             });
             new app.HomeView();

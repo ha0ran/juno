@@ -28,13 +28,32 @@ app.post("/upload", function (request, response) {
 });
    
 app.get( '/api/posts', function( request, response ) { 
-    return Post.find( function( err, posts ) {
-        if( !err ) {
-            return response.send( posts );
-        } else {
-            return console.log( err );
-        } 
-    });
+    var page = request.query.page;
+    var limit = request.query.limit;
+    console.log(request.query);
+    if (page && limit) {
+        Post.find({}).skip((page - 1) * limit).limit(limit).exec( function(err, posts) {
+            if( !err ) {
+                Post.count({}, function(err, count){
+                    if( !err) {
+                        return response.send( {total: count, posts: posts} );
+                    }
+                });
+                
+            } else {
+                return console.log( err );
+            } 
+        })
+    }
+    else {
+        Post.find( function( err, posts ) {
+            if( !err ) {
+                return response.send( {total: total, posts:posts} );
+            } else {
+                return console.log( err );
+            } 
+        });
+    }
 });
 
 //Insert a new book
