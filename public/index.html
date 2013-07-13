@@ -57,7 +57,7 @@
                 <p><time> <%= lastModifiedAt %> </time></p>
                 <h1 class="article-title"><%= title %></h1>
             </header>
-            <div><%= content %></div>
+            <div class="article-content"><%= Markdown(content) %></div>
         </script>
         <script id="pagination-template" type="text/template">
             <% if (pageCount > 0) { %>
@@ -79,6 +79,7 @@
         <script type="text/javascript" src="lib/underscore.js"></script>
         <script type="text/javascript" src="lib/backbone.js"></script>
         <script type="text/javascript" src="lib/bootstrap.js"></script>
+        <!-- Maybe consider use pagedown extra after investigation -->
         <script type="text/javascript" src="lib/js-markdown-extra.js"></script>
         <script type="text/javascript">
             $('#editor').on("input change",function(){
@@ -108,8 +109,8 @@
                     }
                 );
                 $("#title").val('');
-                $("#title").val('');
-                $('#preview').val();
+                $("#editor").val('');
+                $('#preview').html('');
             }
             $(document).ready(function() {
                 jQuery.event.props.push('dataTransfer');
