@@ -4,25 +4,31 @@
         <title>JUNO Editor</title>
         <link href="assets/css/bootstrap.min.css" rel="stylesheet">
         <link href="assets/css/editor.css" rel="stylesheet">
+        <link href="assets/css/fonts.css" rel="stylesheet">
+        <link href="assets/css/juno.css" rel="stylesheet">
     </head>
     <body>
     	<div class="navbar">
             <div class="navbar-inner">
                 <a class="brand" href="#">Juno</a> 
                 <ul class="nav">
-                    <li><a href="#home" data-toggle="tab">Home</a></li> 
-                    <li><a href="#archive" data-toggle="tab">Archive</a></li>
-                    <li class="active"><a href="#new" data-toggle="tab">New</a></li>
+                    <li class="active"><a href="#home" data-toggle="tab">HOME</a></li> 
+                    <li><a href="#archive" data-toggle="tab">ARCHIVE</a></li>
+                    <li><a href="#archive" data-toggle="tab">ABOUT</a></li>
+                    <li><a href="#new" data-toggle="tab">New</a></li>
                 </ul> 
             </div>
         </div>
         <div class="tab-content">
-            <div class="tab-pane" id="home"> 
-                Welcome to new world!
+            <div class="tab-pane active" id="home"> 
+                <div class="container">
+                    <div id="entries">
+                    </div>
+                </div>
             </div>
             <div class="tab-pane" id="archive"> 
             </div>
-            <div class="tab-pane active" id="new">
+            <div class="tab-pane" id="new">
                 <div class="container-fluid">
                     <input type="text" id="title" class="span12" placeholder="title of the article"/>
                     <div class="row-fluid">
@@ -43,6 +49,13 @@
             <div><%= title %></div>
             <div><%= content %></div>
         </script>
+        <script id="entryTemplate" type="text/template">
+            <header>
+                <p><time> <%= lastModifiedAt %> </time></p>
+                <h1 class="article-title"><%= title %></h1>
+            </header>
+            <div><%= content %></div>
+        </script>
         <script type="text/javascript" src="lib/jquery-2.0.2.js"></script>
         <script type="text/javascript" src="lib/underscore.js"></script>
         <script type="text/javascript" src="lib/backbone.js"></script>
@@ -56,6 +69,14 @@
                 $('#preview').html(Markdown($('#editor').val()));
             }
             function submit(){
+                if ($("#title").val() === '') {
+                    alert("Please input article title");
+                    return;
+                }
+                if ($("#editor").val() === '') {
+                    alert("Please input article content");
+                    return;
+                }
                 $.post( '/api/posts', {
                         'title': $("#title").val(),
                         'content': $("#editor").val()
@@ -67,6 +88,9 @@
                         console.dir( jqXHR );
                     }
                 );
+                $("#title").val('');
+                $("#title").val('');
+                $('#preview').val();
             }
             $(document).ready(function() {
                 jQuery.event.props.push('dataTransfer');
@@ -121,6 +145,16 @@
                     return this; 
                 }
             });
+            app.EntryView = Backbone.View.extend({
+                tagName: 'article',
+                template: _.template( $('#entryTemplate').html() ),
+                render: function() {
+                    // tmpl is a function that takes a JSON object and returns html
+                    // this.el is what we defined in tagName. use $el to get access // to jQuery html() function
+                    this.$el.html( this.template( this.model.toJSON() ));
+                    return this; 
+                }
+            });
             var app = app || {};
             app.ArchiveView = Backbone.View.extend({
                 el: '#archive',
@@ -146,15 +180,32 @@
                     this.$el.append( postView.render().el ); 
                 }
             });
-            var posts = [
-                { title: 'JavaScript: The Good Parts', content: 'Douglas Crockford',
-                  lastModifiedAt: '2013-02-08' },
-                { title: 'JavaScript: The Good Parts', content: 'Douglas Crockford',
-                  lastModifiedAt: '2013-01-09' },
-                { title: 'JavaScript: The Good Parts', content: 'Douglas Crockford',
-                  lastModifiedAt: '2012-09-08' },
-            ];
-            new app.ArchiveView( posts );
+            var app = app || {};
+            app.HomeView = Backbone.View.extend({
+                el: '#home #entries',
+                initialize: function( initialBooks ) {
+                    this.collection = new app.Archive(); 
+                    this.collection.fetch({reset: true});
+                    this.render();
+                    this.listenTo( this.collection, 'add', this.renderPost );
+                    this.listenTo( this.collection, 'reset', this.render );
+                },
+                // render library by rendering each book in its collection
+                render: function() { 
+                    this.collection.each(function( item ) {
+                        this.renderEntry( item ); 
+                    }, this );
+                },
+                // render a book by creating a BookView and appending the 
+                // element it renders to the library's element 
+                renderEntry: function( item ) {
+                    var postView = new app.EntryView({
+                        model: item
+                    });
+                    this.$el.append( postView.render().el ); 
+                }
+            });
+            new app.HomeView();
         </script>
     </body>
 </html>

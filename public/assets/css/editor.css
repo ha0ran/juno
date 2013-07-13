@@ -1,6 +1,7 @@
 #editor {
     width: 100%;
     height: 600px;
+    font-family: "Le Monde Courrier"
 }
 #preview {
     border-style: dashed;
