@@ -45,6 +45,9 @@
                 </div>
             </div>
         </div>
+        <script id="logo-template" type="text/template"> 
+            <div class="large-logo">Juno</div>
+        </script>
         <script id="post-template" type="text/template"> 
             <div><%= title %></div>
             <div><%= content %></div>
@@ -57,6 +60,7 @@
             <div><%= content %></div>
         </script>
         <script id="pagination-template" type="text/template">
+            <% if (pageCount > 0) { %>
             <ul class="pager">
                 <% if (currentPage > 1) { %>
                 <li class="next">
@@ -69,6 +73,7 @@
                 </li>
                 <% } %>
             </ul>
+            <% } %>
         </script>
         <script type="text/javascript" src="lib/jquery-2.0.2.js"></script>
         <script type="text/javascript" src="lib/underscore.js"></script>
@@ -109,7 +114,6 @@
             $(document).ready(function() {
                 jQuery.event.props.push('dataTransfer');
                 $('#editor').bind('drop', function(evt) {
-                    console.log("drop here");
                     var files = evt.dataTransfer.files;
                     $.each(files, function(index, file) {
                         if (!file.type.match('image.*')) {
@@ -246,11 +250,19 @@
                        Maybe consider to display a logon or text on the background
                     */
                     this.$el.html('');
-                    this.collection.each(function( item ) {
-                        this.renderEntry( item ); 
-                    }, this );
+                    if(this.collection.length === 0) {
+                        this.renderLogo();
+                        return;
+                    } else {
+                        this.collection.each(function( item ) {
+                            this.renderEntry( item ); 
+                        }, this );
+                    }
                     var pageCount = Math.ceil(this.collection.total / this.itemsPerPage )
                     this.renderPagination( pageCount );
+                },
+                renderLogo: function() {
+                    this.$el.append(_.template($('#logo-template').html()));
                 },
                 // render a book by creating a BookView and appending the 
                 // element it renders to the library's element 
