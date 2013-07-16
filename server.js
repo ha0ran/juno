@@ -48,7 +48,11 @@ app.get( '/api/posts', function( request, response ) {
     else {
         Post.find( function( err, posts ) {
             if( !err ) {
-                return response.send( {total: total, posts:posts} );
+                Post.count({}, function(err, count){
+                    if( !err) {
+                        return response.send( {total: count, posts: posts} );
+                    }
+                });
             } else {
                 return console.log( err );
             } 

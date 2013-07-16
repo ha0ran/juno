@@ -46,17 +46,16 @@ article header p, time, h1 {
     border: 0;
 }
 
-article header time {
+article time {
     text-transform: uppercase;
     color: #CCCCCC;
     font-family: "PT Serif"
 }
 
-article header h1 {
+article h1 {
     text-transform: uppercase;
     font-family: "PT Serif";
     font-size: 40px;
-
 }
 
 article div.article-content {
@@ -64,6 +63,19 @@ article div.article-content {
     font-size: 16px;
     margin-top: 20px;
 }
+
+#archive-entries article {
+    position: relative;
+    padding-left: 6em;
+    padding-bottom: .7em;
+}
+
+#archive-entries article time {
+    position: absolute;
+    top: 30px;
+    left: 0;
+}
+
 
 ul.pager {
     margin: 0;

@@ -12,21 +12,27 @@
             <div class="navbar-inner">
                 <a class="brand" href="#">Juno</a> 
                 <ul class="nav">
-                    <li class="active"><a href="#home" data-toggle="tab">HOME</a></li> 
-                    <li><a href="#archive" data-toggle="tab">ARCHIVE</a></li>
-                    <li><a href="#archive" data-toggle="tab">ABOUT</a></li>
-                    <li><a href="#new" data-toggle="tab">New</a></li>
+                    <li><a href="#home" id="home-tab" data-toggle="tab">HOME</a></li> 
+                    <li class="active"><a href="#archive" id="archive-tab" data-toggle="tab">ARCHIVE</a></li>
+                    <li><a href="#about" id="about-tab" data-toggle="tab">ABOUT</a></li>
+                    <li><a href="#new" id="new-tab" data-toggle="tab">New</a></li>
                 </ul> 
             </div>
         </div>
         <div class="tab-content">
-            <div class="tab-pane active" id="home"> 
+            <div class="tab-pane" id="about">
+            </div>
+            <div class="tab-pane" id="home"> 
                 <div class="container">
                     <div id="entries">
                     </div>
                 </div>
             </div>
-            <div class="tab-pane" id="archive"> 
+            <div class="tab-pane active" id="archive">
+                <div class="container">
+                    <div id="archive-entries">
+                    </div>
+                </div>
             </div>
             <div class="tab-pane" id="new">
                 <div class="container-fluid">
@@ -48,9 +54,9 @@
         <script id="logo-template" type="text/template"> 
             <div class="large-logo">Juno</div>
         </script>
-        <script id="post-template" type="text/template"> 
-            <div><%= title %></div>
-            <div><%= content %></div>
+        <script id="post-summary-template" type="text/template"> 
+                <h1 class="article-title"><%= title %></h1>
+                <time> <%= lastModifiedAt %> </time>
         </script>
         <script id="entry-template" type="text/template">
             <header>
@@ -163,10 +169,9 @@
                 },
             });
             var app = app || {};
-            app.PostView = Backbone.View.extend({
-                tagName: 'div',
-                className: 'post',
-                template: _.template( $('#post-template').html() ),
+            app.PostSummaryView = Backbone.View.extend({
+                tagName: 'article',
+                template: _.template( $('#post-summary-template').html() ),
                 render: function() {
                     // tmpl is a function that takes a JSON object and returns html
                     // this.el is what we defined in tagName. use $el to get access // to jQuery html() function
@@ -206,27 +211,36 @@
             });
             var app = app || {};
             app.ArchiveView = Backbone.View.extend({
-                el: '#archive',
-                initialize: function( initialBooks ) {
+                el: '#archive #archive-entries',
+                initialize: function() {
                     this.collection = new app.Archive(); 
                     this.collection.fetch({reset: true});
                     this.render();
-                    this.listenTo( this.collection, 'add', this.renderPost );
+                    this.listenTo( this.collection, 'add', this.render );
                     this.listenTo( this.collection, 'reset', this.render );
                 },
                 // render library by rendering each book in its collection
                 render: function() { 
-                    this.collection.each(function( item ) {
-                        this.renderPost( item ); 
-                    }, this );
+                    this.$el.html('');
+                    if(this.collection.length === 0) {
+                        this.renderLogo();
+                        return;
+                    } else {
+                        this.collection.each(function( item ) {
+                            this.renderSummaryEntry( item ); 
+                        }, this );
+                    }
+                },
+                renderLogo: function() {
+                    this.$el.append(_.template($('#logo-template').html()));
                 },
                 // render a book by creating a BookView and appending the 
                 // element it renders to the library's element 
-                renderPost: function( item ) {
-                    var postView = new app.PostView({
+                renderSummaryEntry: function( item ) {
+                    var postSummaryView = new app.PostSummaryView({
                         model: item
                     });
-                    this.$el.append( postView.render().el ); 
+                    this.$el.append( postSummaryView.render().el ); 
                 }
             });
             var app = app || {};
@@ -238,7 +252,7 @@
                     this.currentPage = 1;
                     this.updateCollection();
                     this.render();
-                    this.listenTo( this.collection, 'add', this.renderPost );
+                    this.listenTo( this.collection, 'add', this.render );
                     this.listenTo( this.collection, 'reset', this.render );
                     this.eventHub.bind('changePage', this.jumpToPage, this);
                 },
@@ -285,7 +299,8 @@
                     this.updateCollection();
                 }
             });
-            new app.HomeView();
+            //new app.HomeView();
+            new app.ArchiveView();
         </script>
     </body>
 </html>
