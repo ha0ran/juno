@@ -50,18 +50,29 @@
                     </div>
                 </div>
             </div>
+            <div class="tab-pane" id="post">
+                <div class="container-fluid" id="content">
+                </div>
+            </div>
         </div>
         <script id="logo-template" type="text/template"> 
             <div class="large-logo">Juno</div>
         </script>
         <script id="post-summary-template" type="text/template"> 
-                <h1 class="article-title"><%= title %></h1>
+                <a class="title" data-id="<%= id %>"><h1 class="article-title"><%= title %></h1></a>
                 <time> <%= lastModifiedAt %> </time>
         </script>
         <script id="entry-template" type="text/template">
             <header>
                 <p><time> <%= lastModifiedAt %> </time></p>
-                <h1 class="article-title"><%= title %></h1>
+                <h1 class="article-title"><a class="title" data-id="<%= id %>"><%= title %></a></h1>
+            </header>
+            <div class="article-content"><%= Markdown(content) %></div>
+        </script>
+        <script id="post-template" type="text/template">
+            <header>
+                <p><time> <%= lastModifiedAt %> </time></p>
+                <h1 class="article-title"><a class="title" data-id="<%= id %>"><%= title %></a></h1>
             </header>
             <div class="article-content"><%= Markdown(content) %></div>
         </script>
@@ -149,10 +160,15 @@
             Backbone.View.prototype.eventHub = _.extend({}, Backbone.Events);
             var app = app || {};
             app.Post = Backbone.Model.extend({
+                urlRoot: '/api/posts',
                 defaults: {
                     title: 'Unamed',
                     content: '',
                     lastModifiedAt: '1970-01-01'
+                },
+                parse: function( response ) { 
+                    response.id = response._id; 
+                    return response;
                 }
             });
             var app = app || {};
@@ -172,6 +188,37 @@
             app.PostSummaryView = Backbone.View.extend({
                 tagName: 'article',
                 template: _.template( $('#post-summary-template').html() ),
+                events: {
+                    "click a.title": "fetchPost"
+                },
+                initialize: function() {
+                    //this.model = options.model;
+                    // make sure 'this' refers to this View in the success callback below
+                    _.bindAll(this, "renderPostView"); 
+                },
+                render: function() {
+                    // tmpl is a function that takes a JSON object and returns html
+                    // this.el is what we defined in tagName. use $el to get access // to jQuery html() function
+                    this.$el.html( this.template( this.model.toJSON() ));
+                    return this; 
+                },
+                fetchPost: function (event){
+                    this.model.fetch({success: this.renderPostView});
+                },
+                renderPostView: function(){
+                    var postView = new app.PostView({
+                        model: this.model
+                    });
+                    $(".tab-pane.active").removeClass("active");
+                    $(".nav li.active").removeClass("active")
+                    $("#post.tab-pane").addClass("active");
+                    $("#post #content").html( postView.render().el );
+
+                }
+            });
+            app.EntryView = Backbone.View.extend({
+                tagName: 'article',
+                template: _.template( $('#entry-template').html() ),
                 render: function() {
                     // tmpl is a function that takes a JSON object and returns html
                     // this.el is what we defined in tagName. use $el to get access // to jQuery html() function
@@ -179,9 +226,9 @@
                     return this; 
                 }
             });
-            app.EntryView = Backbone.View.extend({
-                tagName: 'article',
-                template: _.template( $('#entry-template').html() ),
+            app.PostView = Backbone.View.extend({
+                tagName: 'div',
+                template: _.template( $('#post-template').html() ),
                 render: function() {
                     // tmpl is a function that takes a JSON object and returns html
                     // this.el is what we defined in tagName. use $el to get access // to jQuery html() function
