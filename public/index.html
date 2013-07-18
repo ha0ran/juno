@@ -12,29 +12,31 @@
             <div class="navbar-inner">
                 <a class="brand" href="#">Juno</a> 
                 <ul class="nav">
-                    <li><a href="#home" id="home-tab" data-toggle="tab">HOME</a></li> 
-                    <li class="active"><a href="#archive" id="archive-tab" data-toggle="tab">ARCHIVE</a></li>
-                    <li><a href="#about" id="about-tab" data-toggle="tab">ABOUT</a></li>
-                    <li><a href="#new" id="new-tab" data-toggle="tab">New</a></li>
+                    <li><a href="#home-pane" id="home-tab" data-toggle="tab">HOME</a></li> 
+                    <li class="active"><a href="#archive-pane" id="archive-tab" data-toggle="tab">ARCHIVE</a></li>
+                    <li><a href="#about-pane" id="about-tab" data-toggle="tab">ABOUT</a></li>
+                    <li><a href="#new-pane" id="new-tab" data-toggle="tab">New</a></li>
+                    <li><a href="#admin-pane" id="admin-tab" data-toggle="tab">Admin</a></li>
+                    <li><a href="#editor-pane" id="edit-tab" data-toggle="tab">Editor</a></li>
                 </ul> 
             </div>
         </div>
         <div class="tab-content">
-            <div class="tab-pane" id="about">
+            <div class="tab-pane" id="about-pane">
             </div>
-            <div class="tab-pane" id="home"> 
+            <div class="tab-pane" id="home-pane"> 
                 <div class="container">
                     <div id="entries">
                     </div>
                 </div>
             </div>
-            <div class="tab-pane active" id="archive">
+            <div class="tab-pane active" id="archive-pane">
                 <div class="container">
                     <div id="archive-entries">
                     </div>
                 </div>
             </div>
-            <div class="tab-pane" id="new">
+            <div class="tab-pane" id="new-pane">
                 <div class="container-fluid">
                     <input type="text" id="title" class="span12" placeholder="title of the article"/>
                     <div class="row-fluid">
@@ -50,9 +52,17 @@
                     </div>
                 </div>
             </div>
-            <div class="tab-pane" id="post">
+            <div class="tab-pane" id="post-pane">
                 <div class="container-fluid" id="content">
                 </div>
+            </div>
+            <div class="tab-pane" id="admin-pane">
+                <div class="container">
+                    <div id="admin-entries">
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane" id="editor-pane">
             </div>
         </div>
         <script id="logo-template" type="text/template"> 
@@ -61,6 +71,12 @@
         <script id="post-summary-template" type="text/template"> 
                 <a class="title" data-id="<%= id %>"><h1 class="article-title"><%= title %></h1></a>
                 <time> <%= lastModifiedAt %> </time>
+        </script>
+        <script id="admin-summary-template" type="text/template"> 
+                <a class="title" data-id="<%= id %>"><h1 class="article-title"><%= title %></h1></a>
+                <time> <%= lastModifiedAt %> </time>
+                <button class="btn btn-primary btn-edit" type="button">Edit</button>
+                <button class="btn btn-danger btn-delete" type="button">Delete</button>
         </script>
         <script id="entry-template" type="text/template">
             <header>
@@ -185,6 +201,7 @@
                 },
             });
             var app = app || {};
+            /* TODO Need to create a abstract PostEntry for Home/Archive/Admin custom by params */
             app.PostSummaryView = Backbone.View.extend({
                 tagName: 'article',
                 template: _.template( $('#post-summary-template').html() ),
@@ -214,6 +231,45 @@
                     $("#post.tab-pane").addClass("active");
                     $("#post #content").html( postView.render().el );
 
+                }
+            });
+            app.AdminSummaryView = Backbone.View.extend({
+                tagName: 'article',
+                template: _.template( $('#admin-summary-template').html() ),
+                events: {
+                    "click a.title": "fetchPost",
+                    "click button.btn-edit": "edit",
+                    "click button.btn-delete": "drop"
+                },
+                initialize: function() {
+                    //this.model = options.model;
+                    // make sure 'this' refers to this View in the success callback below
+                    _.bindAll(this, "renderPostView"); 
+                },
+                render: function() {
+                    // tmpl is a function that takes a JSON object and returns html
+                    // this.el is what we defined in tagName. use $el to get access // to jQuery html() function
+                    this.$el.html( this.template( this.model.toJSON() ));
+                    return this; 
+                },
+                fetchPost: function (event){
+                    this.model.fetch({success: this.renderPostView});
+                },
+                renderPostView: function(){
+                    var postView = new app.PostView({
+                        model: this.model
+                    });
+                    $(".tab-pane.active").removeClass("active");
+                    $(".nav li.active").removeClass("active")
+                    $("#post.tab-pane").addClass("active");
+                    $("#post #content").html( postView.render().el );
+                },
+                edit: function() {
+                    console.log("Edit post");
+                },
+                drop: function(){
+                    this.model.destroy();
+                    this.remove();
                 }
             });
             app.EntryView = Backbone.View.extend({
@@ -258,7 +314,7 @@
             });
             var app = app || {};
             app.ArchiveView = Backbone.View.extend({
-                el: '#archive #archive-entries',
+                el: '#archive-pane #archive-entries',
                 initialize: function() {
                     this.collection = new app.Archive(); 
                     this.collection.fetch({reset: true});
@@ -290,9 +346,42 @@
                     this.$el.append( postSummaryView.render().el ); 
                 }
             });
+            app.AdminView = Backbone.View.extend({
+                el: '#admin-pane #admin-entries',
+                initialize: function() {
+                    this.collection = new app.Archive(); 
+                    this.collection.fetch({reset: true});
+                    this.render();
+                    this.listenTo( this.collection, 'add', this.render );
+                    this.listenTo( this.collection, 'reset', this.render );
+                },
+                // render library by rendering each book in its collection
+                render: function() { 
+                    this.$el.html('');
+                    if(this.collection.length === 0) {
+                        this.renderLogo();
+                        return;
+                    } else {
+                        this.collection.each(function( item ) {
+                            this.renderSummaryEntry( item ); 
+                        }, this );
+                    }
+                },
+                renderLogo: function() {
+                    this.$el.append(_.template($('#logo-template').html()));
+                },
+                // render a book by creating a BookView and appending the 
+                // element it renders to the library's element 
+                renderSummaryEntry: function( item ) {
+                    var postSummaryView = new app.AdminSummaryView({
+                        model: item
+                    });
+                    this.$el.append( postSummaryView.render().el ); 
+                }
+            });
             var app = app || {};
             app.HomeView = Backbone.View.extend({
-                el: '#home #entries',
+                el: '#home-pane #entries',
                 initialize: function() {
                     this.collection = new app.Archive();
                     this.itemsPerPage = 3;
@@ -346,8 +435,9 @@
                     this.updateCollection();
                 }
             });
-            //new app.HomeView();
+            new app.HomeView();
             new app.ArchiveView();
+            new app.AdminView();
         </script>
     </body>
 </html>
