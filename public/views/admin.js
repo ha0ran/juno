@@ -15,7 +15,7 @@ app.AdminView = Backbone.View.extend({
             return;
         } else {
             this.collection.each(function( item ) {
-                this.renderSummaryEntry( item ); 
+                this.renderEntry( item ); 
             }, this );
         }
     },
@@ -24,10 +24,13 @@ app.AdminView = Backbone.View.extend({
     },
     // render a book by creating a BookView and appending the 
     // element it renders to the library's element 
-    renderSummaryEntry: function( item ) {
-        var postSummaryView = new app.AdminSummaryView({
-            model: item
+    renderEntry: function( item ) {
+        var entryView = new app.EntryView({
+            model: item,
+            config: {
+                admin: true
+            }
         });
-        this.$el.append( postSummaryView.render().el ); 
+        this.$el.append( entryView.render().el ); 
     }
 });
