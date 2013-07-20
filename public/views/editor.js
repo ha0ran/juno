@@ -4,7 +4,8 @@ app.EditorView = Backbone.View.extend({
     events: {
         "click button.btn-submit": "submit",
         "input textarea#content": "preview",
-        "change textarea#content": "preview"
+        "change textarea#content": "preview",
+        "drop textarea#content": "uploadFile"
         
     },
     initialize: function(options){
@@ -17,14 +18,36 @@ app.EditorView = Backbone.View.extend({
         this.$el.html( this.template( this.model.toJSON() ));
         return this; 
     },
-    preview: function (){
-        $('#preview').html(Markdown(this.$el.find('#content').val()));
+    preview: function () {
+        this.$el.find('#preview').html(Markdown(this.$el.find('#content').val()));
     },
-    submit: function(evt){
+    submit: function(evt) {
         evt.preventDefault();
         this.model.save({
             'title': this.$el.find('#title').val(),
             'content': this.$el.find('#content').val()
+        });
+    },
+    uploadFile: function(evt) {
+        evt.preventDefault();
+        var files = evt.dataTransfer.files;
+        $.each(files, function(index, file) {
+            if (!file.type.match('image.*')) {
+                alert("Sorry, but we only support images now!");
+                //Display Error Message 
+            }
+            var fileReader = new FileReader();
+            fileReader.onload = (function(file) {
+                return function(e) { 
+                    $.post('/upload', {name: file.name, content: e.target.result}, function(data) {
+                        var result = $.parseJSON(data);
+                        var editor = $('textarea#content');
+                        editor.val(editor.val() + " !["+ file.name + "](" + result.url + ") ");
+                        editor.change();
+                    });
+                }
+            })(file);
+            fileReader.readAsDataURL(file);
         });
     }
 });
