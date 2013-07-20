@@ -25,15 +25,11 @@ $(document).ready(function() {
         });
         return false;
     });
-    function preview(){
-        $('#preview').html(Markdown($('#editor').val()));
-    }
-    $('#editor').on("input change",function(){
-        preview();
+    $("div.navbar ul.nav a").click(function(evt){
+        var obj = $(evt.currentTarget);
+        var viewName = obj.data('view');
+        new app[viewName]();
     });
-
     new app.HomeView();
-    new app.ArchiveView();
-    new app.AdminView();
 });
 

@@ -36,10 +36,8 @@ app.EntryView = Backbone.View.extend({
         var editorView = new app.EditorView({
             model: this.model
         });
-        $(".tab-pane.active").removeClass("active");
-        $(".nav li.active").removeClass("active")
-        $("#editor-pane.tab-pane").addClass("active");
-        $("#editor-pane").html( editorView.render().el );
+
+        $('div.navbar ul.nav a[data-view=EditorView]').tab('show');
     },
     deletePost: function(){
         this.model.destroy();

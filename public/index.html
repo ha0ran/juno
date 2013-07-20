@@ -12,25 +12,26 @@
             <div class="navbar-inner">
                 <a class="brand" href="#">Juno</a> 
                 <ul class="nav">
-                    <li><a href="#home-pane" id="home-tab" data-toggle="tab">HOME</a></li> 
-                    <li class="active"><a href="#archive-pane" id="archive-tab" data-toggle="tab">ARCHIVE</a></li>
-                    <li><a href="#about-pane" id="about-tab" data-toggle="tab">ABOUT</a></li>
-                    <li><a href="#new-pane" id="new-tab" data-toggle="tab">New</a></li>
-                    <li><a href="#admin-pane" id="admin-tab" data-toggle="tab">Admin</a></li>
-                    <li><a href="#editor-pane" id="edit-tab" data-toggle="tab">Editor</a></li>
+                    <li class="active"><a href="#home-pane" data-toggle="tab" data-view="HomeView">HOME</a></li> 
+                    <li><a href="#archive-pane" data-toggle="tab" data-view="ArchiveView">ARCHIVE</a></li>
+                    <li><a href="#about-pane" data-toggle="tab" data-view="AboutView">ABOUT</a></li>
+                    <li><a href="#admin-pane" data-toggle="tab" data-view="AdminView">Admin</a></li>
+                    <li><a href="#editor-pane" data-toggle="tab" data-view="EditorView">Editor</a></li>
                 </ul> 
             </div>
         </div>
         <div class="tab-content">
+            <!-- comment out about page until we implemnt it
             <div class="tab-pane" id="about-pane">
             </div>
-            <div class="tab-pane" id="home-pane"> 
+            -->
+            <div class="tab-pane active" id="home-pane"> 
                 <div class="container">
                     <div id="entries">
                     </div>
                 </div>
             </div>
-            <div class="tab-pane active" id="archive-pane">
+            <div class="tab-pane" id="archive-pane">
                 <div class="container">
                     <div id="archive-entries">
                     </div>
