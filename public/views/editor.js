@@ -3,9 +3,9 @@ app.EditorView = Backbone.View.extend({
     template: _.template( $('#editor-template').html() ),
     events: {
         "click button.btn-submit": "submit",
-        "input textarea#content": "preview",
-        "change textarea#content": "preview",
-        "drop textarea#content": "uploadFile"
+        "input textarea.content": "preview",
+        "change textarea.content": "preview",
+        "drop textarea.content": "uploadFile"
         
     },
     initialize: function(options){
@@ -16,16 +16,17 @@ app.EditorView = Backbone.View.extend({
         // tmpl is a function that takes a JSON object and returns html
         // this.el is what we defined in tagName. use $el to get access // to jQuery html() function
         this.$el.html( this.template( this.model.toJSON() ));
+        this.preview();
         return this; 
     },
     preview: function () {
-        this.$el.find('#preview').html(Markdown(this.$el.find('#content').val()));
+        this.$el.find('div.preview').html(Markdown(this.$el.find('textarea.content').val()));
     },
     submit: function(evt) {
         evt.preventDefault();
         this.model.save({
-            'title': this.$el.find('#title').val(),
-            'content': this.$el.find('#content').val()
+            'title': this.$el.find('textarea.title').val(),
+            'content': this.$el.find('textarea.content').val()
         });
     },
     uploadFile: function(evt) {
@@ -41,7 +42,7 @@ app.EditorView = Backbone.View.extend({
                 return function(e) { 
                     $.post('/upload', {name: file.name, content: e.target.result}, function(data) {
                         var result = $.parseJSON(data);
-                        var editor = $('textarea#content');
+                        var editor = $('#editor-pane textarea.content');
                         editor.val(editor.val() + " !["+ file.name + "](" + result.url + ") ");
                         editor.change();
                     });

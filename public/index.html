@@ -3,7 +3,6 @@
     <head>
         <title>JUNO Editor</title>
         <link href="assets/css/bootstrap.min.css" rel="stylesheet">
-        <link href="assets/css/editor.css" rel="stylesheet">
         <link href="assets/css/fonts.css" rel="stylesheet">
         <link href="assets/css/juno.css" rel="stylesheet">
     </head>
@@ -14,7 +13,9 @@
                 <ul class="nav">
                     <li class="active"><a href="#home-pane" data-toggle="tab" data-view="HomeView">HOME</a></li> 
                     <li><a href="#archive-pane" data-toggle="tab" data-view="ArchiveView">ARCHIVE</a></li>
+                    <!-- comment out about page until we implemnt it
                     <li><a href="#about-pane" data-toggle="tab" data-view="AboutView">ABOUT</a></li>
+                    -->
                     <li><a href="#admin-pane" data-toggle="tab" data-view="AdminView">Admin</a></li>
                     <li><a href="#editor-pane" data-toggle="tab" data-view="EditorView">Editor</a></li>
                 </ul> 
@@ -52,19 +53,19 @@
             <div class="tab-pane" id="editor-pane">
             </div>
         </div>
-        <script id="editor-template" type="text/template"> 
-            <input type="text" id="title" class="span12" placeholder="title of the article" value="<%= title %>"/>
-            <div class="row-fluid">
-                <div class="span6">
-                    <textarea id="content"><%= content %></textarea>
+        <script id="editor-template" type="text/template">
+            <div class="editor">
+                <div class="inputs">
+                    <input type="text" class="title" placeholder="title of the article" value="<%= title %>"/>
+                    <textarea class="content"><%= content %></textarea>
                 </div>
-                <div id="preview" class="span6">
+                <div class="preview markdown">
+                </div>
+                <div class="btn-group">
+                    <button class="btn btn-primary btn-submit">Submit</button>
                 </div>
             </div>
-            <div class="btn-group">
-                <a class="btn" onclick="preview();">Preview</a>
-                <button class="btn btn-primary btn-submit">Submit</button>
-            </div>
+
         </script>
         <script id="logo-template" type="text/template"> 
             <div class="large-logo">Juno</div>

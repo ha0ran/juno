@@ -81,3 +81,72 @@ ul.pager {
     margin: 0;
     padding: 5px 20px;
 }
+
+/* ================== For Editor ================== */
+div.editor {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    margin-left: 5%;
+    margin-right: 5%;
+    position: relative; /* Fix the issue that preview could not compute correct width as it's position is absolute*/
+}
+
+div.editor div.inputs {
+    width: 49%;
+    display: inline-block;
+}
+
+div.editor div.preview {
+    margin-left: 2%;
+    width: 49%;
+    height: 700px;
+    border-style: dashed;
+    border-width: 2px;
+    border-color: #CCCCCC;
+    border-radius: 5px;
+    font-family: "Le Monde Courrier 2";
+    display: inline-block;
+    padding: 10px;
+    position: absolute;
+    box-sizing: border-box; /* to include border width when computing width */
+}
+
+div.editor div.btn-group {
+    text-align: right;
+    display: block;
+}
+
+div.inputs input.title {
+    width: 100%;
+    padding: 8px;
+    font-size: 20px;
+    line-height: 28px;
+    box-shadow: 0px 0px 6px 1px rgba(192,192,192,0.7) inset;
+    display: block;
+    box-sizing: border-box; /* to include padding when computing width */
+    height: 35px;
+    font-family: "Le Monde Courrier 2";
+    margin-bottom: 0;
+}
+
+div.inputs textarea.content {
+    width: 100%;
+    height: 650px;
+    font-family: "Le Monde Courrier 2";
+    display: block;
+    box-sizing: border-box;  /* to include padding when computing width */
+    margin-top: 15px;
+    resize: none;
+    box-shadow: 0px 0px 6px 1px rgba(192,192,192,0.7) inset;
+    padding: 10px;
+    font-size: 16px;
+}
+div.inputs input.title:focus{
+    box-shadow: 0px 0px 6px 1px rgba(0,96,224,0.5) inset;
+}
+div.inputs textarea.content:focus{
+    box-shadow: 0px 0px 6px 1px rgba(0,96,224,0.5) inset;
+}
+
+
+

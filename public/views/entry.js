@@ -29,7 +29,6 @@ app.EntryView = Backbone.View.extend({
         $(".nav li.active").removeClass("active")
         $("#post-pane.tab-pane").addClass("active");
         $("#post-pane #content").html( postView.render().el );
-
     },
     editPost: function() {
         console.log("Edit post");
