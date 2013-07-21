@@ -54,24 +54,26 @@ article.title-entry time,h1 {
 article.title-entry time {
     font-size: 20px;
     color: #999999;
-    margin-right: 20px;
+    height: 40px;
+    padding: 10px;
 }
 article.title-entry h1 {
     font-size: 24px;
-    margin: 0px;
+    margin-top: 0;
+    margin-bottom: 0;
 }
 /* ================== Admin Pane ================== */
 div#admin-pane article:first-child {
     border-top: 1px dashed #CCCCCC;
 }
+div#admin-pane article.title-entry {
+    position: relative;
+}
 article.title-entry div.header {
     display: inline-block;
-    width: 85%;
 }
 article.title-entry div.btn-group {
-    width: 10%;
     margin: 0px;
-    position: absolute;
     height: 40px;
     text-align: right;
 }

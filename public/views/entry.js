@@ -10,7 +10,7 @@ app.EntryView = Backbone.View.extend({
         //this.model = options.model;
         // make sure 'this' refers to this View in the success callback below
         _.bindAll(this, "renderPost");
-        this.config = options.config || {};
+        this.config = options.config || {styles: {}};
     },
     render: function() {
         // tmpl is a function that takes a JSON object and returns html

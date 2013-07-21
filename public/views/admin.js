@@ -27,9 +27,14 @@ app.AdminView = Backbone.View.extend({
     renderEntry: function( item ) {
         var entryView = new app.EntryView({
             model: item,
-            className: 'title-entry',
+            className: 'row-fluid title-entry',
             config: {
-                admin: true
+                admin: true,
+                styles: {
+                    header: 'span10',
+                    time: 'span2',
+                    title: 'span8'
+                }
             }
         });
         this.$el.append( entryView.render().el ); 
