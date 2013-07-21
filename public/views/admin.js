@@ -1,5 +1,5 @@
 app.AdminView = Backbone.View.extend({
-    el: '#admin-pane #admin-entries',
+    el: 'div#admin-pane',
     initialize: function() {
         this.collection = new app.Archive(); 
         this.collection.fetch({reset: true});
@@ -27,6 +27,7 @@ app.AdminView = Backbone.View.extend({
     renderEntry: function( item ) {
         var entryView = new app.EntryView({
             model: item,
+            className: 'title-entry',
             config: {
                 admin: true
             }

@@ -2,6 +2,10 @@ body {
 	background: url(../images/gradient_texture.png) repeat;
 }
 
+div,input,textarea {
+    box-sizing: border-box; /* to include padding/border-width when computing width */
+}
+/* ================== Navigation ================== */
 .navbar {
     margin-bottom: 0px;
 }
@@ -18,11 +22,6 @@ div .nav {
     font-weight: bold;
 }
 
-div#home #entries {
-    background-color: #F8F8F8;
-    box-shadow: 0px 0px 10px 5px rgba(0,0,0,0.2);
-}
-
 div.large-logo {
     top: 50%;
     left: 0;
@@ -33,6 +32,57 @@ div.large-logo {
     font-size: 300px;
     text-align: center;
     text-shadow: 4px 4px 10px rgba(0,0,0,0.8);
+}
+
+/* ================== Tab Pane ================== */
+div.tab-pane {
+    margin-left: 10%;
+    margin-right: 10%;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    width: 80%;
+}
+/* ================== Post Entry ================== */
+article.title-entry {
+    border-bottom: 1px dashed #CCCCCC;
+}
+article.title-entry time,h1 {
+    display: inline-block;
+    text-transform: uppercase;
+    font-family: "PT Serif"
+}
+article.title-entry time {
+    font-size: 20px;
+    color: #999999;
+    margin-right: 20px;
+}
+article.title-entry h1 {
+    font-size: 24px;
+    margin: 0px;
+}
+/* ================== Admin Pane ================== */
+div#admin-pane article:first-child {
+    border-top: 1px dashed #CCCCCC;
+}
+article.title-entry div.header {
+    display: inline-block;
+    width: 85%;
+}
+article.title-entry div.btn-group {
+    width: 10%;
+    margin: 0px;
+    position: absolute;
+    height: 40px;
+    text-align: right;
+}
+
+article.title-entry button.btn {
+    top: 5px;
+}
+/*
+div#home #entries {
+    background-color: #F8F8F8;
+    box-shadow: 0px 0px 10px 5px rgba(0,0,0,0.2);
 }
 
 article{
@@ -75,15 +125,15 @@ article div.article-content {
     top: 30px;
     left: 0;
 }
-
+*/
 
 ul.pager {
     margin: 0;
     padding: 5px 20px;
 }
 
-/* ================== For Editor ================== */
-div.editor {
+/* ================== Editor ================== */
+div.tab-pane#editor-pane {
     margin-top: 20px;
     margin-bottom: 20px;
     margin-left: 5%;
@@ -108,7 +158,6 @@ div.editor div.preview {
     display: inline-block;
     padding: 10px;
     position: absolute;
-    box-sizing: border-box; /* to include border width when computing width */
 }
 
 div.editor div.btn-group {
@@ -123,7 +172,6 @@ div.inputs input.title {
     line-height: 28px;
     box-shadow: 0px 0px 6px 1px rgba(192,192,192,0.7) inset;
     display: block;
-    box-sizing: border-box; /* to include padding when computing width */
     height: 35px;
     font-family: "Le Monde Courrier 2";
     margin-bottom: 0;
@@ -134,7 +182,6 @@ div.inputs textarea.content {
     height: 650px;
     font-family: "Le Monde Courrier 2";
     display: block;
-    box-sizing: border-box;  /* to include padding when computing width */
     margin-top: 15px;
     resize: none;
     box-shadow: 0px 0px 6px 1px rgba(192,192,192,0.7) inset;
