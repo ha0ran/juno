@@ -9,18 +9,9 @@ app.AdminView = Backbone.View.extend({
     },
     // render library by rendering each book in its collection
     render: function() { 
-        this.$el.html('');
-        if(this.collection.length === 0) {
-            this.renderLogo();
-            return;
-        } else {
-            this.collection.each(function( item ) {
-                this.renderEntry( item ); 
-            }, this );
-        }
-    },
-    renderLogo: function() {
-        this.$el.append(_.template($('#logo-template').html()));
+        this.collection.each(function( item ) {
+            this.renderEntry( item ); 
+        }, this );
     },
     // render a book by creating a BookView and appending the 
     // element it renders to the library's element 
@@ -32,8 +23,9 @@ app.AdminView = Backbone.View.extend({
                 admin: true,
                 styles: {
                     header: 'span10',
+                    buttons: 'span2',
                     time: 'span2',
-                    title: 'span8'
+                    title: 'span10'
                 }
             }
         });

@@ -42,9 +42,11 @@ div.tab-pane {
     margin-bottom: 20px;
     width: 80%;
 }
+
 /* ================== Post Entry ================== */
 article.title-entry {
     border-bottom: 1px dashed #CCCCCC;
+    position: relative;
 }
 article.title-entry time,h1 {
     display: inline-block;
@@ -61,17 +63,24 @@ article.title-entry h1 {
     font-size: 24px;
     margin-top: 0;
     margin-bottom: 0;
+    height: 40px;
+}
+
+article.title-entry h1 a {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: block;
 }
 /* ================== Admin Pane ================== */
-div#admin-pane article:first-child {
+article:first-child {
     border-top: 1px dashed #CCCCCC;
 }
-div#admin-pane article.title-entry {
-    position: relative;
-}
+
 article.title-entry div.header {
     display: inline-block;
 }
+
 article.title-entry div.btn-group {
     margin: 0px;
     height: 40px;
@@ -81,53 +90,6 @@ article.title-entry div.btn-group {
 article.title-entry button.btn {
     top: 5px;
 }
-/*
-div#home #entries {
-    background-color: #F8F8F8;
-    box-shadow: 0px 0px 10px 5px rgba(0,0,0,0.2);
-}
-
-article{
-    border-bottom: 1px dashed #ccc;
-    padding: 20px 20px 20px 20px;
-}
-
-article header p, time, h1 {
-    margin: 0;
-    padding: 0;
-    border: 0;
-}
-
-article time {
-    text-transform: uppercase;
-    color: #CCCCCC;
-    font-family: "PT Serif"
-}
-
-article h1 {
-    text-transform: uppercase;
-    font-family: "PT Serif";
-    font-size: 40px;
-}
-
-article div.article-content {
-    font-family: "Le Monde Courrier 2";
-    font-size: 16px;
-    margin-top: 20px;
-}
-
-#archive-entries article {
-    position: relative;
-    padding-left: 6em;
-    padding-bottom: .7em;
-}
-
-#archive-entries article time {
-    position: absolute;
-    top: 30px;
-    left: 0;
-}
-*/
 
 ul.pager {
     margin: 0;
@@ -140,6 +102,7 @@ div.tab-pane#editor-pane {
     margin-bottom: 20px;
     margin-left: 5%;
     margin-right: 5%;
+    width: 90%;
     position: relative; /* Fix the issue that preview could not compute correct width as it's position is absolute*/
 }
 

@@ -1,6 +1,6 @@
 var app = app || {};
 app.ArchiveView = Backbone.View.extend({
-    el: '#archive-pane #archive-entries',
+    el: '#archive-pane',
     initialize: function() {
         this.collection = new app.Archive(); 
         this.collection.fetch({reset: true});
@@ -11,23 +11,24 @@ app.ArchiveView = Backbone.View.extend({
     // render library by rendering each book in its collection
     render: function() { 
         this.$el.html('');
-        if(this.collection.length === 0) {
-            this.renderLogo();
-            return;
-        } else {
-            this.collection.each(function( item ) {
-                this.renderEntry( item ); 
-            }, this );
-        }
-    },
-    renderLogo: function() {
-        this.$el.append(_.template($('#logo-template').html()));
+        this.collection.each(function( item ) {
+            this.renderEntry( item ); 
+        }, this );
     },
     // render a book by creating a BookView and appending the 
     // element it renders to the library's element 
     renderEntry: function( item ) {
         var entryView = new app.EntryView({
-            model: item
+            model: item,
+            className: 'row-fluid title-entry',
+            config: {
+                styles: {
+                    header: 'span10',
+                    buttons: 'span2',
+                    time: 'span2',
+                    title: 'span10'
+                }
+            }
         });
         this.$el.append( entryView.render().el ); 
     }

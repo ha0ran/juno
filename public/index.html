@@ -33,10 +33,6 @@
                 </div>
             </div>
             <div class="tab-pane" id="archive-pane">
-                <div class="container">
-                    <div id="archive-entries">
-                    </div>
-                </div>
             </div>
             <div class="tab-pane" id="new-pane">
             </div>
@@ -75,7 +71,7 @@
                 </h1>
             </div>
             <% if (config.admin) { %>
-            <div class="span2 btn-group">
+            <div class="<%= config.styles.buttns %> btn-group">
                 <button class="btn btn-primary btn-edit" type="button">Edit</button>
                 <button class="btn btn-danger btn-delete" type="button">Delete</button>
             </div>
