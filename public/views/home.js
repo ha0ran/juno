@@ -1,5 +1,5 @@
 app.HomeView = Backbone.View.extend({
-    el: '#home-pane #entries',
+    el: '#home-pane',
     initialize: function() {
         this.collection = new app.Archive();
         this.itemsPerPage = 3;
@@ -19,25 +19,28 @@ app.HomeView = Backbone.View.extend({
            Maybe consider to display a logon or text on the background
         */
         this.$el.html('');
-        if(this.collection.length === 0) {
-            this.renderLogo();
-            return;
-        } else {
-            this.collection.each(function( item ) {
-                this.renderEntry( item ); 
-            }, this );
-        }
+        this.collection.each(function( item ) {
+            this.renderEntry( item ); 
+        }, this );
+
         var pageCount = Math.ceil(this.collection.total / this.itemsPerPage )
         this.renderPagination( pageCount );
-    },
-    renderLogo: function() {
-        this.$el.append(_.template($('#logo-template').html()));
     },
     // render a book by creating a BookView and appending the 
     // element it renders to the library's element 
     renderEntry: function( item ) {
         var postView = new app.EntryView({
-            model: item
+            model: item,
+            className: 'full-entry',
+            config: {
+                showContent: true,
+                styles: {
+                    //header: 'span10',
+                    //buttons: 'span2',
+                    //time: 'span2',
+                    //title: 'span10'
+                }
+            }
         });
         this.$el.append( postView.render().el ); 
     },

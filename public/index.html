@@ -3,23 +3,22 @@
     <head>
         <title>JUNO Editor</title>
         <link href="assets/css/bootstrap.min.css" rel="stylesheet">
+        <link href="assets/css/font-awesome.min.css" rel="stylesheet">
         <link href="assets/css/fonts.css" rel="stylesheet">
         <link href="assets/css/juno.css" rel="stylesheet">
     </head>
     <body>
+        <header role="banner"><h1><a href="/">Haoran</a></h1></header>
     	<div class="navbar">
-            <div class="navbar-inner">
-                <a class="brand" href="#">Juno</a> 
-                <ul class="nav">
-                    <li class="active"><a href="#home-pane" data-toggle="tab" data-view="HomeView">HOME</a></li> 
-                    <li><a href="#archive-pane" data-toggle="tab" data-view="ArchiveView">ARCHIVE</a></li>
-                    <!-- comment out about page until we implemnt it
-                    <li><a href="#about-pane" data-toggle="tab" data-view="AboutView">ABOUT</a></li>
-                    -->
-                    <li><a href="#admin-pane" data-toggle="tab" data-view="AdminView">Admin</a></li>
-                    <li><a href="#editor-pane" data-toggle="tab" data-view="EditorView">Editor</a></li>
-                </ul> 
-            </div>
+            <ul class="nav">
+                <li class="active"><a href="#home-pane" data-toggle="tab" data-view="HomeView">HOME</a></li> 
+                <li><a href="#archive-pane" data-toggle="tab" data-view="ArchiveView">ARCHIVE</a></li>
+                <!-- comment out about page until we implemnt it
+                <li><a href="#about-pane" data-toggle="tab" data-view="AboutView">ABOUT</a></li>
+                -->
+                <li><a href="#admin-pane" data-toggle="tab" data-view="AdminView">Admin</a></li>
+                <li><a href="#editor-pane" data-toggle="tab" data-view="EditorView">Editor</a></li>
+            </ul> 
         </div>
         <div class="tab-content">
             <!-- comment out about page until we implemnt it
@@ -27,10 +26,6 @@
             </div>
             -->
             <div class="tab-pane active" id="home-pane"> 
-                <div class="container">
-                    <div id="entries">
-                    </div>
-                </div>
             </div>
             <div class="tab-pane" id="archive-pane">
             </div>
@@ -65,7 +60,7 @@
 
         <script id="entry-template" type="text/template">
             <div class="<%= config.styles.header %> header">
-                <time class="<%= config.styles.time %>"> <%= lastModifiedAt %> </time>
+                <time class="<%= config.styles.time %> date"> <i class="icon-calendar"></i><%= lastModifiedAt %> </time>
                 <h1 class="<%= config.styles.title %> title">
                     <a data-id="<%= id %>"><%= title %></a>
                 </h1>
@@ -90,14 +85,15 @@
         <script id="pagination-template" type="text/template">
             <% if (pageCount > 0) { %>
             <ul class="pager">
-                <% if (currentPage > 1) { %>
+
+                <% if (currentPage < pageCount ) { %>
                 <li class="next">
-                    <a href="#" class="pagination-item" data-page="<%= currentPage - 1 %>">Newer &rarr;</a>
+                    <a href="#" class="pagination-item" data-page="<%= currentPage + 1 %>"> Older &rarr;</a>
                 </li>
                 <% } %>
-                <% if (currentPage < pageCount ) { %>
+                <% if (currentPage > 1) { %>
                 <li class="previous">
-                    <a href="#" class="pagination-item" data-page="<%= currentPage + 1 %>">&larr; Older</a>
+                    <a href="#" class="pagination-item" data-page="<%= currentPage - 1 %>">&larr; Newer</a>
                 </li>
                 <% } %>
             </ul>

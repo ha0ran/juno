@@ -5,40 +5,63 @@ body {
 div,input,textarea {
     box-sizing: border-box; /* to include padding/border-width when computing width */
 }
+/* ================== Header =================*/
+body>header {
+    border-bottom: 3px solid #272727;
+    text-align: center;
+    width: 60%;
+    margin: auto;
+}
+
+body>header h1 {
+    display: block;
+    position: relative;
+    margin: 0;
+    padding-top: 20px;
+    padding-bottom: 10px;
+    font-size: 70px;
+}
+body>header h1 a {
+    text-decoration: none;
+    color: black;
+    font-family: STHeiti, "Futura PT",Georgia, serif;
+    font-weight: normal;
+}
+body>header h1 a:hover {
+    text-decoration: none;
+}
 /* ================== Navigation ================== */
+.navbar,.nav {
+    height: 40px;
+}
 .navbar {
     margin-bottom: 0px;
 }
-
-.navbar .brand {
-    font-family: "Le Monde Courrier";
-    font-weight: bold;
+.navbar .nav {
+    width: 504px;
+    margin: auto;
+    float: none;
+}
+.navbar .nav>li>a, .navbar .nav>.active>a, .navbar .nav>.active>a:hover, .navbar .nav>.active>a:focus {
     font-size: 30px;
-    padding: 6px 20px 2px;
-}
-
-div .nav {
     font-family: "Le Monde Courrier";
-    font-weight: bold;
-}
+    color: black;
+    text-shadow: none;
 
-div.large-logo {
-    top: 50%;
-    left: 0;
-    width: 100%;
-    position: fixed;
-    font-family: "Le Monde Courrier";
-    font-weight: bold;
-    font-size: 300px;
-    text-align: center;
-    text-shadow: 4px 4px 10px rgba(0,0,0,0.8);
+}
+.navbar .nav>li>a:hover {
+    color: #08C;
+}
+.navbar .nav>.active>a, .navbar .nav>.active>a:hover, .navbar .nav>.active>a:focus {
+    box-shadow: none;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none; 
 }
 
 /* ================== Tab Pane ================== */
 div.tab-pane {
     margin-left: 10%;
     margin-right: 10%;
-    margin-top: 20px;
     margin-bottom: 20px;
     width: 80%;
 }
@@ -48,22 +71,26 @@ article.title-entry {
     border-bottom: 1px dashed #CCCCCC;
     position: relative;
 }
-article.title-entry time,h1 {
-    display: inline-block;
-    text-transform: uppercase;
-    font-family: "PT Serif"
-}
+
 article.title-entry time {
     font-size: 20px;
     color: #999999;
     height: 40px;
     padding: 10px;
+
+    display: inline-block;
+    text-transform: uppercase;
+    font-family: "PT Serif"
 }
 article.title-entry h1 {
     font-size: 24px;
     margin-top: 0;
     margin-bottom: 0;
     height: 40px;
+
+    display: inline-block;
+    text-transform: uppercase;
+    font-family: "PT Serif"
 }
 
 article.title-entry h1 a {
@@ -72,8 +99,47 @@ article.title-entry h1 a {
     white-space: nowrap;
     display: block;
 }
+
+
+article.full-entry>.header>h1 {
+    margin-top: 0px;
+    margin-bottom: 20px;
+}
+
+article.full-entry>.header>h1>a{
+    text-transform: uppercase;
+    font-family: "PT Serif";
+    color: black;
+}
+article.full-entry>.content {
+    border-bottom: 1px dashed #CCC;
+    margin-bottom: 30px;
+}
+
+article.full-entry>.header>time {
+    font-size: 16px;
+    color: #999999;
+
+    display: inline-block;
+    text-transform: uppercase;
+    font-family: "PT Serif";
+}
+
+/* ================== Home Pane ================== */
+div.tab-pane#home-pane article:first-child {
+    margin-top: 40px;
+}
+div.tab-pane#home-pane ul.pager li>a {
+    background-color: transparent;
+    border: none;
+    -webkit-border-radius: none;
+    -moz-border-radius: none;
+    border-radius: none;
+    font-size: 24px;
+    color: black;
+}
 /* ================== Admin Pane ================== */
-article:first-child {
+#archive-pane,#admin-pane article:first-child {
     border-top: 1px dashed #CCCCCC;
 }
 
