@@ -1,5 +1,6 @@
 app.PostView = Backbone.View.extend({
-    tagName: 'div',
+    tagName: 'article',
+    className: 'full-entry',
     template: _.template( $('#post-template').html() ),
     render: function() {
         // tmpl is a function that takes a JSON object and returns html

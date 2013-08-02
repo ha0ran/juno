@@ -2,7 +2,7 @@ app.EntryView = Backbone.View.extend({
     tagName: 'article',
     template: _.template( $('#entry-template').html() ),
     events: {
-        "click a.title": "fetchPost",
+        "click a.entry-title": "fetchPost",
         "click button.btn-edit": "editPost",
         "click button.btn-delete": "deletePost"
     },

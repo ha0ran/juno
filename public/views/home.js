@@ -34,12 +34,7 @@ app.HomeView = Backbone.View.extend({
             className: 'full-entry',
             config: {
                 showContent: true,
-                styles: {
-                    //header: 'span10',
-                    //buttons: 'span2',
-                    //time: 'span2',
-                    //title: 'span10'
-                }
+                styles: {}
             }
         });
         this.$el.append( postView.render().el ); 

@@ -62,7 +62,7 @@
             <div class="<%= config.styles.header %> header">
                 <time class="<%= config.styles.time %> date"> <i class="icon-calendar"></i><%= lastModifiedAt %> </time>
                 <h1 class="<%= config.styles.title %> title">
-                    <a data-id="<%= id %>"><%= title %></a>
+                    <a class="entry-title" data-id="<%= id %>"><%= title %></a>
                 </h1>
             </div>
             <% if (config.admin) { %>
@@ -76,11 +76,14 @@
             <% } %>
         </script>
         <script id="post-template" type="text/template">
-            <header>
-                <p><time> <%= lastModifiedAt %> </time></p>
-                <h1 class="article-title"><a class="title" data-id="<%= id %>"><%= title %></a></h1>
-            </header>
-            <div class="article-content"><%= Markdown(content) %></div>
+            <div class="header">
+                <time class="date"> <i class="icon-calendar"></i><%= lastModifiedAt %> </time>
+                <h1 class="title">
+                    <a class="entry-title" data-id="<%= id %>"><%= title %></a>
+                </h1>
+            </div>
+
+            <div class="content"><%= Markdown(content) %></div>
         </script>
         <script id="pagination-template" type="text/template">
             <% if (pageCount > 0) { %>

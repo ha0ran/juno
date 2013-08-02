@@ -114,6 +114,7 @@ article.full-entry>.header>h1>a{
 article.full-entry>.content {
     border-bottom: 1px dashed #CCC;
     margin-bottom: 30px;
+    font-family: "Le Monde Courrier 2";
 }
 
 article.full-entry>.header>time {
