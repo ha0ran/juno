@@ -181,7 +181,7 @@ div.editor div.inputs {
 div.editor div.preview {
     margin-left: 2%;
     width: 49%;
-    height: 700px;
+    height: 730px;
     border-style: dashed;
     border-width: 2px;
     border-color: #CCCCCC;
@@ -196,7 +196,13 @@ div.editor div.btn-group {
     text-align: right;
     display: block;
 }
-
+div.editor div.btn-group.wmd-button-group1,
+div.editor div.btn-group.wmd-button-group2,
+div.editor div.btn-group.wmd-button-group3,
+div.editor div.btn-group.wmd-button-group4 {
+    text-align: right;
+    display: inline;
+}
 div.inputs input.title {
     width: 100%;
     padding: 8px;
@@ -214,7 +220,6 @@ div.inputs textarea.content {
     height: 650px;
     font-family: "Le Monde Courrier 2";
     display: block;
-    margin-top: 15px;
     resize: none;
     box-shadow: 0px 0px 6px 1px rgba(192,192,192,0.7) inset;
     padding: 10px;

@@ -25,8 +25,8 @@ app.ArchiveView = Backbone.View.extend({
                 styles: {
                     header: 'span10',
                     buttons: 'span2',
-                    time: 'span2',
-                    title: 'span10'
+                    time: 'span3',
+                    title: 'span9'
                 }
             }
         });

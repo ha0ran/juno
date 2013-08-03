@@ -6,6 +6,7 @@
         <link href="assets/css/font-awesome.min.css" rel="stylesheet">
         <link href="assets/css/fonts.css" rel="stylesheet">
         <link href="assets/css/juno.css" rel="stylesheet">
+        <link href="assets/css/jquery.pagedown-bootstrap.css" rel="stylesheet">
     </head>
     <body>
         <header role="banner"><h1><a href="/">Haoran</a></h1></header>
@@ -72,7 +73,7 @@
             </div>
             <% } %>
             <% if (config.showContent) {%>
-            <div class="content"><%= Markdown(content) %></div>
+            <div class="content"><%= MarkdownConverter.makeHtml(content) %></div>
             <% } %>
         </script>
         <script id="post-template" type="text/template">
@@ -83,7 +84,7 @@
                 </h1>
             </div>
 
-            <div class="content"><%= Markdown(content) %></div>
+            <div class="content"><%= MarkdownConverter.makeHtml(content) %></div>
         </script>
         <script id="pagination-template" type="text/template">
             <% if (pageCount > 0) { %>
@@ -107,7 +108,11 @@
         <script type="text/javascript" src="lib/backbone.js"></script>
         <script type="text/javascript" src="lib/bootstrap.js"></script>
         <!-- Maybe consider use pagedown extra after investigation -->
-        <script type="text/javascript" src="lib/js-markdown-extra.js"></script>
+        <script type="text/javascript" src="lib/Markdown.Converter.js"></script>
+        <script type="text/javascript" src="lib/Markdown.Sanitizer.js"></script>
+        <script type="text/javascript" src="lib/Markdown.Editor.js"></script>
+        <script type="text/javascript" src="lib/Markdown.Extra.js"></script>
+        <script type="text/javascript" src="lib/jquery.pagedown-bootstrap.js"></script>
         <script type="text/javascript" src="init.js"></script>
         <script type="text/javascript" src="models/post.js"></script>
         <script type="text/javascript" src="models/archive.js"></script>

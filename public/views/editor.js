@@ -5,29 +5,31 @@ app.EditorView = Backbone.View.extend({
         "click button.btn-submit": "submit",
         "input textarea.content": "preview",
         "change textarea.content": "preview",
-        "drop textarea.content": "uploadFile"
-        
+        "drop textarea.content.wmd-input": "uploadFile"
     },
     initialize: function(options){
         this.model = (options && options.model) || new app.Post();
+        this.editor = null;
         this.render();
     },
     render: function() {
         // tmpl is a function that takes a JSON object and returns html
         // this.el is what we defined in tagName. use $el to get access // to jQuery html() function
         this.$el.html( this.template( this.model.toJSON() ));
-        this.preview();
+        if(this.editor === null) {
+            this.editor = $("textarea").pagedownBootstrap();
+        }
         return this; 
-    },
-    preview: function () {
-        this.$el.find('div.preview').html(Markdown(this.$el.find('textarea.content').val()));
     },
     submit: function(evt) {
         evt.preventDefault();
         this.model.save({
-            'title': this.$el.find('textarea.title').val(),
+            'title': this.$el.find('input.title').val(),
             'content': this.$el.find('textarea.content').val()
         });
+        this.$el.find('input.title').val('');
+        this.$el.find('textarea.content').val('');
+        this.$el.find('div.preview.markdown.wmd-preview').html('');
     },
     uploadFile: function(evt) {
         evt.preventDefault();
