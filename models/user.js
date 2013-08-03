@@ -14,7 +14,8 @@ var User = new Schema({
         last_name       : String,
         hashed_password : String,
         salt            : String,
-        createdAt       : Date
+        createdAt       : Date,
+        posts           : [ { type: Schema.Types.ObjectId, ref: 'User' } ]
     });
 
 User.virtual('id')

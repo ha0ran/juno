@@ -2,11 +2,17 @@ var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
 //Schemas
-var PostSchema = new Schema({ 
-        title: String,
-        author: String,
-        content: String,
-        lastModifiedDate: Date
+var Post = new Schema({ 
+        author         : String,
+        content        : String,
+        createdAt      : Date,
+        editor         : [{ type: Schema.Types.ObjectId, ref: 'User' }],
+        lastModifiedAt : Date,
+        lastModifiedBy : { type: Schema.Types.ObjectId, ref: 'User' },
+        owner          : { type: Schema.Types.ObjectId, ref: 'User' },
+        reader         : [{ type: Schema.Types.ObjectId, ref: 'User' }],
+        title          : String
     });
+
 //Models
-exports.Post = mongoose.model( 'Post', PostSchema );
+exports.Post = mongoose.model( 'Post', Post );

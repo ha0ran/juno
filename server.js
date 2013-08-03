@@ -1,19 +1,61 @@
+/********************************************
+ *                 Load modules             *
+ ********************************************/
 var express = require("express"),
-	fs = require("fs"); 
+	fs = require("fs"), 
     path = require("path");                                                                
-    app = express(),
-    mongoose = require( 'mongoose' ),
-    Post = require('./models/post').Post
-    application_root = __dirname;                                                                             
+    
 
-// tell express to use the bodyParser middleware                                                 
-// and set upload directory                                                                      
+/********************************************
+ *                 Load models              *
+ ********************************************/
+
+mongoose = require( 'mongoose' );
+Post = require('./models/post').Post;
+User = require('./models/user').User;
+mongoose.connect( 'mongodb://localhost/juno' );
+                                                                           
+application_root = __dirname;
+
+/********************************************
+ *             Config Application           *
+ ********************************************/
+app = express();     
+                                                          
 app.use( express.bodyParser({ keepExtensions: true, uploadDir: "uploads" }) );                                                                     
 app.use( express.static( path.join(application_root, 'public') ) );
 app.use('/uploads', express.static( path.join(application_root, 'uploads') ) );
 app.use( express.methodOverride() );
+app.use(express.cookieParser('We1come2N3wW0r1d!1545'));
+app.use(express.cookieSession());
 
-mongoose.connect( 'mongodb://localhost/juno' );
+/********************************************
+ *                Load Routes               *
+ ********************************************/
+require('./routes/category')(app);
+require('./routes/post')(app);
+require('./routes/session_token')(app);
+require('./routes/user')(app);
+
+/********************************************
+ *              Helper Functions            *
+ ********************************************/
+function loadUser(req, res, next) {
+    if (req.session.user_id) {
+        User.findById(req.session.user_id, function(err, user) {
+            if (user) {
+                req.currentUser = user;
+                next();
+            } else {
+                res.redirect('/sessions/new');
+            }
+        });
+    } else if (req.signedCookies.sessiontoken) {
+        authenticateFromSessionToken(req, res, next);
+    } else {
+        res.redirect('/sessions/new');
+    }
+}
 
 app.post("/upload", function (request, response) {                                               
 	var decodedImg = new Buffer(request.body.content, 'base64');
@@ -25,105 +67,6 @@ app.post("/upload", function (request, response) {
     	url: "/" + imgPath
     }));
     response.end();
-});
-
-app.get( '/api/posts', function( request, response ) { 
-    var page = request.query.page;
-    var limit = request.query.limit;
-    console.log(request.query);
-    if (page && limit) {
-        Post.find({}).skip((page - 1) * limit).limit(limit).exec( function(err, posts) {
-            if( !err ) {
-                Post.count({}, function(err, count){
-                    if( !err) {
-                        return response.send( {total: count, posts: posts} );
-                    }
-                });
-                
-            } else {
-                return console.log( err );
-            } 
-        })
-    }
-    else {
-        Post.find( function( err, posts ) {
-            if( !err ) {
-                Post.count({}, function(err, count){
-                    if( !err) {
-                        return response.send( {total: count, posts: posts} );
-                    }
-                });
-            } else {
-                return console.log( err );
-            } 
-        });
-    }
-});
-
-//Insert a new book
-app.post( '/api/posts', function( request, response ) {
-    // should find the article accroding to it's id, if no id create new one
-    var post = new Post({
-        title: request.body.title,
-        content: request.body.content,
-        lastModifiedAt: new Date().getTime()
-    });
-    post.save( function( err ) {
-        if( !err ) {
-            return console.log( 'created' );
-        } else {
-            return console.log( err );
-        } 
-    });
-    return response.send( post ); 
-});
-
-// Get a new post by ID
-app.get( '/api/posts/:id', function( request, response ) {
-    console.log("Get Post by id:" + request.params.id);
-    return Post.findById( request.params.id, function( err, post ) {
-        if( !err ) {
-            console.log(post.id);
-            console.log(post.title);
-            console.log(post.content);
-            return response.send( post );
-        } else {
-            return console.log( err );
-        } 
-    });
-});
-
-//Update a post
-app.put( '/api/posts/:id', function( request, response ) {
-    console.log( 'Updating book ' + request.body.title );
-    return Post.findById( request.params.id, function( err, post ) {
-        post.title = request.body.title;
-        post.content = request.body.content;
-        post.lastModifiedAt = new Date().getTime();
-        return post.save( function( err ) { 
-            if( !err ) {
-                console.log( 'post updated' ); 
-            } else {
-                console.log( err );
-            }
-            return response.send( post ); 
-        });
-    }); 
-});
-
- //Delete a post
-app.delete( '/api/posts/:id', function( request, response ) { 
-    console.log( 'Deleting book with id: ' + request.params.id );
-    return Post.findById( request.params.id, function( err, post ) {
-        return post.remove( function( err ) {
-            if( !err ) {
-                console.log( 'Book removed' ); 
-                return response.send( '' );
-            } else {
-                console.log( err );
-            }
-        }); 
-    });
 });
 
 app.listen(3000);

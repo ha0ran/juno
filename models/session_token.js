@@ -3,9 +3,9 @@ var mongoose = require('mongoose'),
 
 //Schemas
 SessionToken = new Schema({
-    name:  { type: String, index: true },
-    series: { type: String, index: true },
-    token:  { type: String, index: true }
+    name   : { type: String, index: true },
+    series : { type: String, index: true },
+    token  : { type: String, index: true }
 });
 
 SessionToken.method('randomToken', function() {
