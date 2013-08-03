@@ -1,0 +1,19 @@
+<html>
+    <body>
+    <h1>Login</h1>
+    <form id="login" method='post', action='/api/sessions'>
+        <fieldset>
+        <legend>Credentials</legend>
+        <p class="error" id="error"></p>
+        <label>
+        User Name:
+        <input type="text" name="user[name]"> </label>
+        <br />
+        <label>
+        Password:
+        <input type="password" name="user[password]"> </label>
+        <br />
+        <input type="submit" value="Login"> </fieldset>
+        </form>
+    </body>
+</html>

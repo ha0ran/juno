@@ -8,7 +8,9 @@ $(document).ready(function() {
     $("div.navbar ul.nav a").click(function(evt){
         var obj = $(evt.currentTarget);
         var viewName = obj.data('view');
-        new app[viewName]();
+        if (app[viewName] !== undefined) {
+            new app[viewName]();
+        }
     });
     new app.HomeView();
     window.MarkdownConverter = new Markdown.Converter();
