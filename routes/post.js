@@ -1,8 +1,11 @@
+var auth = require('../helpers/auth_helper');
+
 /********************************************
  *              Routes for Post             *
  ********************************************/
 module.exports = function(app){
     app.get( '/api/posts', function( request, response ) { 
+        auth.loggedIn(request, response);
         var page = request.query.page;
         var limit = request.query.limit;
         console.log(request.query);

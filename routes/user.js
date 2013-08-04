@@ -17,11 +17,12 @@ module.exports = function(app){
         // should find the article accroding to it's id, if no id create new one
         console.log(request);
         var user = new User({
-            name: request.body.user.name,
-            first_name: request.body.user.first_name,
-            last_name:  request.body.user.last_name,
-            password: request.body.user.password,
-            createdAt: (new Date()).toJSON()
+            name       : request.body.user.name,
+            first_name : request.body.user.first_name,
+            last_name  : request.body.user.last_name,
+            password   : request.body.user.password,
+            role       : request.body.user.role,
+            createdAt  : (new Date()).toJSON()
         });
         user.save( function( err ) {
             if( !err ) {
