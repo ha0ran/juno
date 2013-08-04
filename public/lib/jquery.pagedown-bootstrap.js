@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  * 
  */
-
+/* TODO need to refactor these codes */
 (function( $ ){
 
     $.fn.pagedownBootstrap = function( options ) {  
@@ -87,6 +87,12 @@
             //Setup editor
             var editor = new Markdown.Editor(converter, "-"+idAppend.toString(), help);
             editor.run();
+            /* Add hook to hilight codes using highlight.js */
+            editor.hooks.chain("onPreviewRefresh", function () {
+                $('pre code').each(function(i, e) {
+                    hljs.highlightBlock(e);
+                });
+            });
             return editor;
 		});
 

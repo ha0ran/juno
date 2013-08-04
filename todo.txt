@@ -1,0 +1,7 @@
+1. Refactor init.js, make sure codes for login users won't appear here
+2. Refactor pagedown-bootstrap.js we should use only one Markdown Convertor
+3. Refactor merge Archive and Admin page, custom template for loggedIn user on server
+4. Add Admin page to mamage users, category
+5. Modify editor page to add category/adjust previlliges
+6. Enbale upload attachment on editor page
+7. Add more Tabs, like reading/movies/notes/travel

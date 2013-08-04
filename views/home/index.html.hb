@@ -45,19 +45,26 @@
 <script type="text/javascript" src="lib/underscore.js"></script>
 <script type="text/javascript" src="lib/backbone.js"></script>
 <script type="text/javascript" src="lib/bootstrap.js"></script>
-<!-- Maybe consider use pagedown extra after investigation -->
+<script type="text/javascript" src="lib/highlight.js"></script>
+
+{{#if loggedIn }}
 <script type="text/javascript" src="lib/Markdown.Converter.js"></script>
 <script type="text/javascript" src="lib/Markdown.Sanitizer.js"></script>
 <script type="text/javascript" src="lib/Markdown.Editor.js"></script>
 <script type="text/javascript" src="lib/Markdown.Extra.js"></script>
 <script type="text/javascript" src="lib/jquery.pagedown-bootstrap.js"></script>
+{{/if}}
+
 <script type="text/javascript" src="init.js"></script>
 <script type="text/javascript" src="models/post.js"></script>
 <script type="text/javascript" src="models/archive.js"></script>
-<script type="text/javascript" src="views/admin.js"></script>
 <script type="text/javascript" src="views/archive.js"></script>
-<script type="text/javascript" src="views/editor.js"></script>
 <script type="text/javascript" src="views/entry.js"></script>
 <script type="text/javascript" src="views/home.js"></script>
 <script type="text/javascript" src="views/pagination.js"></script>
 <script type="text/javascript" src="views/post.js"></script>
+
+{{#if loggedIn }}
+<script type="text/javascript" src="views/editor.js"></script>
+<script type="text/javascript" src="views/admin.js"></script>
+{{/if}}

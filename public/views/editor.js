@@ -21,6 +21,11 @@ app.EditorView = Backbone.View.extend({
         }
         return this; 
     },
+    preview: function() {
+        return
+        this.$el.find('div.preview.markdown.wmd-preview').html(MarkdownConverter.makeHtml(this.$el.find('textarea.content').val()));
+        
+    },
     submit: function(evt) {
         evt.preventDefault();
         this.model.save({

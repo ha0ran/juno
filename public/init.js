@@ -4,7 +4,6 @@ $.event.props.push('dataTransfer');
 var app = app || {};
 
 $(document).ready(function() {
-
     $("div.navbar ul.nav a").click(function(evt){
         var obj = $(evt.currentTarget);
         var viewName = obj.data('view');
@@ -14,5 +13,6 @@ $(document).ready(function() {
     });
     new app.HomeView();
     window.MarkdownConverter = new Markdown.Converter();
-    Markdown.Extra.init(window.MarkdownConverter);
+    Markdown.Extra.init(window.MarkdownConverter, {highlighter: "highlight"});
+    hljs.initHighlightingOnLoad();
 });
